@@ -1,0 +1,52 @@
+version: 2
+updates:
+  # Enable version updates for Python dependencies
+  - package-ecosystem: "uv"
+    directories:
+      - "/"
+    open-pull-requests-limit: 10
+    schedule:
+      interval: "weekly"
+    labels:
+      - "dependencies"
+      - "python"
+    ignore:
+      # Ignore major version updates for critical dependencies
+      - dependency-name: "fastapi"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "sqlalchemy"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "pydantic"
+        update-types: ["version-update:semver-major"]
+    groups:
+      # Group FastAPI ecosystem updates
+      fastapi:
+        patterns:
+          - "fastapi*"
+          - "uvicorn*"
+          - "starlette*"
+      # Group testing dependencies
+      testing:
+        patterns:
+          - "pytest*"
+          - "httpx"
+      # Group database dependencies
+      database:
+        patterns:
+          - "sqlalchemy*"
+          - "alembic*"
+          - "aiosqlite*"
+          - "psycopg*"
+
+  # Enable version updates for GitHub Actions
+  - package-ecosystem: "github-actions"
+    directories:
+      - "/"
+    schedule:
+      interval: "weekly"
+    commit-message:
+      prefix: "ci"
+      include: "scope"
+    labels:
+      - "dependencies"
+      - "github-actions"
